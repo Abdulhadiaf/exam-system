@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ExamAdded;
 use App\Models\Paper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +14,7 @@ class PaperController extends Controller
      */
     public function index()
     {
-        $papers = Paper::with(['subject', 'userPapers' => function($query) {
+        $papers = Paper::with(['subject', 'userPapers' => function ($query) {
             $query->where('user_id', Auth::id());
         }])->get();
         return response()->json($papers);
@@ -34,6 +35,7 @@ class PaperController extends Controller
     {
         // return $request->all();
         $paper = Paper::create($request->all());
+        event(new ExamAdded($paper));
         return response()->json($paper);
     }
 
