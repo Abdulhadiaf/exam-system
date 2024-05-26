@@ -97,7 +97,7 @@ const editPaper = (paper) => {
                         <tr v-for="paper in papers" :key="paper.id"
                             class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th class="px-6 py-4">{{ paper.id }}</th>
-                            <th class="px-6 py-4">{{ paper.subject.name }}</th>
+                            <th class="px-6 py-4">{{ paper.subject ? paper.subject.name : '' }}</th>
                             <td class="px-6 py-4">{{ paper.title }}</td>
                             <td class="px-6 py-4">{{ paper.duration }}</td>
                             <td class="px-6 py-4">

@@ -29,12 +29,16 @@ const initializeFormData = () => {
     formData.value = initialFormData;
   }
 };
+const countdown = computed(() => store.getters.formattedCountdown);
 
 onMounted(async () => {
   store.dispatch('refreshCurrentTime');
   await store.dispatch('papers/fetchPaper', paperId.value);
   await store.dispatch('papers/startPaper', { paper_id: paperId.value, started_at: store.state.current_time });
   initializeFormData();
+  const paperTime = paper.value.duration ;
+  store.dispatch('startCountdown', paperTime * 60);
+
 });
 
 
@@ -57,6 +61,7 @@ const save = async () => {
     <Title>{{ paper ? paper.title : '' }}</Title>
     <p><b>Subject: </b>{{ paper ? paper.subject.name : '' }}</p>
     <p class="mb-5"><b>Duration: </b>{{ paper ? paper.duration : '' }} mins</p>
+    <p class="mb-5"><b>Time left: </b>{{ countdown }} </p>
     <hr>
     <form @submit.prevent="save">
       {{ formData.q_id6 }}

@@ -1,16 +1,15 @@
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
+import { LOGO_PATH } from '../config/constant.js';
 
+const logoPath = ref(LOGO_PATH);
 const store = useStore();
 const userName = computed(() => store.state.username)
 const userEmail = computed(() => store.state.useremail)
 
 onMounted(() => {
-  // Echo.private('App.Models.User.' + userId)
-  //   .notification((notification) => {
-  //     console.log(notification.type);
-  //   });
+
 });
 
 
@@ -48,8 +47,8 @@ const logout = async () => {
             <span class="sr-only">Toggle sidebar</span>
           </button>
           <a href="/" class="flex items-center justify-between mr-4">
-            <img src="" class="mr-3 h-8" alt="Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Exam system</span>
+            <img :src="logoPath" class="mr-3 h-8" alt="Logo" />
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Admin</span>
           </a>
           <form action="#" method="GET" class="hidden md:block md:pl-2">
             <label for="topbar-search" class="sr-only">Search</label>

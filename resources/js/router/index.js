@@ -58,7 +58,7 @@ const routes = [
         path: '/results',
         name: 'Results',
         component: Results
-      },
+      }
     ],
     meta: { requiresAuth: true, role: 'admin' }
   },

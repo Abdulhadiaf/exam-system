@@ -1,9 +1,9 @@
-// src/store/index.js
 import { createStore } from 'vuex'
 import axios from 'axios'
 import subjects from './modules/subjects'
 import papers from './modules/papers'
 import questions from './modules/questions'
+import { API_URL } from '../config/constant.js';
 
 export default createStore({
   modules: {
@@ -18,6 +18,8 @@ export default createStore({
     useremail: localStorage.getItem('userEmail'),
     userRole: localStorage.getItem('userRole'),
     current_time: '',
+    countdown: 0,
+    countdownInterval: null,
   },
   mutations: {
     SET_TOKEN(state, token) {
@@ -54,11 +56,20 @@ export default createStore({
 
       state.current_time = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     },
+    SET_COUNTDOWN(state, countdown) {
+      state.countdown = countdown;
+    },
+    CLEAR_COUNTDOWN_INTERVAL(state) {
+      if (state.countdownInterval) {
+        clearInterval(state.countdownInterval);
+        state.countdownInterval = null;
+      }
+    }
   },
   actions: {
     async login({ commit }, credentials) {
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/login', credentials);
+        const response = await axios.post(`${API_URL}/login`, credentials);
         const { token, user } = response.data;
         console.log(user);
         localStorage.setItem('authToken', token);
@@ -71,7 +82,7 @@ export default createStore({
       }
     },
     async logout({ commit }) {
-      const response = await axios.post('http://127.0.0.1:8000/api/logout', {}, {
+      const response = await axios.post(`${API_URL}/logout`, {}, {
         headers: {
           Authorization: `Bearer ${this.state.token}`
         }
@@ -80,7 +91,7 @@ export default createStore({
     },
     async fetchUser({ commit }) {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/user', {
+        const response = await axios.get(`${API_URL}/user`, {
           headers: {
             Authorization: `Bearer ${this.state.token}`
           }
@@ -93,7 +104,7 @@ export default createStore({
     },
     async fetchUsers({ commit }) {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/users', {
+        const response = await axios.get(`${API_URL}/users`, {
           headers: {
             Authorization: `Bearer ${this.state.token}`
           }
@@ -107,7 +118,7 @@ export default createStore({
     },
     async fetchSubjects({ commit }) {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/subject', {
+        const response = await axios.get(`${API_URL}/subject`, {
           headers: {
             Authorization: `Bearer ${this.state.token}`
           }
@@ -121,10 +132,27 @@ export default createStore({
     refreshCurrentTime({ commit }) {
       commit('SET_CURRENT_TIME');
     },
+    startCountdown({ commit, state }, duration) {
+      commit('CLEAR_COUNTDOWN_INTERVAL');
+      commit('SET_COUNTDOWN', duration);
+
+      state.countdownInterval = setInterval(() => {
+        if (state.countdown > 0) {
+          commit('SET_COUNTDOWN', state.countdown - 1);
+        } else {
+          commit('CLEAR_COUNTDOWN_INTERVAL');
+        }
+      }, 1000);
+    }
   },
   getters: {
-    isAuthenticated: state => state.token ? true : false,
+    isAuthenticated: state => !!state.token,
     getUser: state => state.user,
     getUsers: state => state.users,
+    formattedCountdown: state => {
+      const minutes = Math.floor(state.countdown / 60);
+      const seconds = state.countdown % 60;
+      return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
   }
-})
+});

@@ -2,7 +2,9 @@
 import { computed, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import Pusher from 'pusher-js';
+import { LOGO_PATH } from '../config/constant.js';
 
+const logoPath = ref(LOGO_PATH);
 const store = useStore();
 const userName = computed(() => store.state.username)
 const userEmail = computed(() => store.state.useremail)
@@ -18,7 +20,7 @@ var pusher = new Pusher(import.meta.env.VITE_PUSHER_APP_KEY, {
 
 var channel = pusher.subscribe('my-channel');
 channel.bind('my-event', function (data) {
-  messages.value.push(JSON.stringify(data));
+  messages.value.push(data.exam);
 });
 
 
@@ -57,8 +59,8 @@ const logout = async () => {
             <span class="sr-only">Toggle sidebar</span>
           </button>
           <a href="/" class="flex items-center justify-between mr-4">
-            <img src="" class="mr-3 h-8" alt="Logo" />
-            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Exam system</span>
+            <img :src="logoPath" class="mr-3 h-8" alt="Logo" />
+            <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">User</span>
           </a>
           <form action="#" method="GET" class="hidden md:block md:pl-2">
             <label for="topbar-search" class="sr-only">Search</label>
@@ -108,33 +110,14 @@ const logout = async () => {
               class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
               Notifications
             </div>
-            <div>
+            <div v-for="message in messages">
               <a href="#" class="flex py-3 px-4 border-b hover:bg-gray-100 dark:hover:bg-gray-600 dark:border-gray-600">
-                <div class="flex-shrink-0">
-                  <img class="w-11 h-11 rounded-full"
-                    src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/avatars/bonnie-green.png"
-                    alt="Bonnie Green avatar" />
-                  <div
-                    class="flex absolute justify-center items-center ml-6 -mt-5 w-5 h-5 rounded-full border border-white bg-primary-700 dark:border-gray-700">
-                    <svg aria-hidden="true" class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M8.707 7.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l2-2a1 1 0 00-1.414-1.414L11 7.586V3a1 1 0 10-2 0v4.586l-.293-.293z">
-                      </path>
-                      <path
-                        d="M3 5a2 2 0 012-2h1a1 1 0 010 2H5v7h2l1 2h4l1-2h2V5h-1a1 1 0 110-2h1a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V5z">
-                      </path>
-                    </svg>
-                  </div>
-                </div>
                 <div class="pl-3 w-full">
                   <div class="text-gray-500 font-normal text-sm mb-1.5 dark:text-gray-400">
-                    New message from {{ messages }}
-                    <span class="font-semibold text-gray-900 dark:text-white">Bonnie Green</span>: "Hey, what's up? All
-                    set for the presentation?"
+                  {{ message.message }}
                   </div>
                   <div class="text-xs font-medium text-primary-600 dark:text-primary-500">
-                    a few moments ago
+                    {{ message.created_at }}
                   </div>
                 </div>
               </a>

@@ -16,7 +16,8 @@ class UserPaperController extends Controller
      */
     public function index()
     {
-        //
+        $userPapers = UserPaper::with(['user','paper','userAnswers.question'])->get();
+        return response()->json($userPapers);
     }
 
     /**
@@ -76,7 +77,9 @@ class UserPaperController extends Controller
      */
     public function show(UserPaper $userPaper)
     {
-        //
+        $userPaper = UserPaper::with(['user','paper.questions'])->find($userPaper->id);
+        return response()->json($userPaper);
+
     }
 
     /**

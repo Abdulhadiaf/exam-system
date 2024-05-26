@@ -17,4 +17,8 @@ class UserPaper extends Model
     {
         return $this->belongsTo(Paper::class);
     }
+    public function userAnswers()
+    {
+        return $this->hasMany(UserAnswer::class);
+    }
 }

@@ -33,7 +33,6 @@ class PaperController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $paper = Paper::create($request->all());
         event(new ExamAdded($paper));
         return response()->json($paper);

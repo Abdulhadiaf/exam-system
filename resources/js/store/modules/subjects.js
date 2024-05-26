@@ -1,5 +1,6 @@
 // src/store/modules/subjects.js
 import axios from 'axios';
+import { API_URL } from '../../config/constant.js';
 
 const state = {
   subjects: [],
@@ -28,7 +29,7 @@ const mutations = {
 const actions = {
   async fetchSubjects({ commit }) {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/subjects', {
+      const response = await axios.get(`${API_URL}/subjects`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -40,7 +41,7 @@ const actions = {
   },
   async createSubject({ commit }, subject) {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/subjects', subject, {
+      const response = await axios.post(`${API_URL}/subjects`, subject, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -52,7 +53,7 @@ const actions = {
   },
   async updateSubject({ commit }, updatedSubject) {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/subjects/${updatedSubject.id}`, updatedSubject, {
+      const response = await axios.put(`${API_URL}/subjects/${updatedSubject.id}`, updatedSubject, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -65,7 +66,7 @@ const actions = {
 
   async deleteSubject({ commit }, subjectId) {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/subjects/${subjectId}`, {
+      await axios.delete(`${API_URL}/subjects/${subjectId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }

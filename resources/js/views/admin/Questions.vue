@@ -91,7 +91,8 @@ const editQuestion = (question) => {
                             placeholder="Question text" required />
                     </div>
                     <div class="mb-3 col-span-2">
-                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Options (only for MSQ and Radio question)</label>
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Options
+                            (only for MSQ and Radio question)</label>
                         <input v-model="qOptions" type="text" id="options"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="option,option,option..." />
@@ -118,7 +119,11 @@ const editQuestion = (question) => {
                             <th class="px-6 py-4">{{ question.paper.title }}</th>
                             <td class="px-6 py-4">{{ question.type }}</td>
                             <td class="px-6 py-4">{{ question.question_text }}</td>
-                            <td class="px-6 py-4">{{ question.options }}</td>
+                            <td class="px-6 py-4">
+                                <p v-for="opt in question.options">
+                                    {{ opt }} <br>
+                                </p>
+                            </td>
                             <td class="px-6 py-4">
                                 <InfoButton @click="editQuestion(question)">Edit</InfoButton>
                                 <DangerButton @click="deleteQuestion(question.id)">Delete</DangerButton>

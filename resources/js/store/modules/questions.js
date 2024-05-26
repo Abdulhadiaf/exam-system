@@ -1,5 +1,6 @@
 // src/store/modules/questions.js
 import axios from 'axios';
+import { API_URL } from '../../config/constant.js';
 
 const state = {
   questions: [],
@@ -28,7 +29,7 @@ const mutations = {
 const actions = {
   async fetchQuestions({ commit }) {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/questions', {
+      const response = await axios.get(`${API_URL}/questions`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -40,7 +41,7 @@ const actions = {
   },
   async createQuestion({ commit }, question) {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/questions', question, {
+      const response = await axios.post(`${API_URL}/questions`, question, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -53,7 +54,7 @@ const actions = {
   },
   async updateQuestion({ commit }, updatedQuestion) {
     try {
-      const response = await axios.put(`http://127.0.0.1:8000/api/questions/${updatedQuestion.id}`, updatedQuestion, {
+      const response = await axios.put(`${API_URL}/questions/${updatedQuestion.id}`, updatedQuestion, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -66,7 +67,7 @@ const actions = {
 
   async deleteQuestion({ commit }, questionId) {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/questions/${questionId}`, {
+      await axios.delete(`${API_URL}/questions/${questionId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }

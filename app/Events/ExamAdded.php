@@ -2,15 +2,18 @@
 
 namespace App\Events;
 
+use App\Models\Notification;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Auth;
 
-class ExamAdded implements ShouldBroadcast
+class ExamAdded implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,7 +23,15 @@ class ExamAdded implements ShouldBroadcast
      */
     public function __construct($exam)
     {
-        $this->exam=$exam;
+        $msg = "New exam added (" . $exam->title . ")";
+        $notification = Notification::create([
+            'user_id' => Auth::id(),
+            'message' => $msg 
+        ]);
+        $this->exam = [
+            'message' => $notification->message,
+            'created_at' => $notification->created_at->diffForHumans()
+        ];
     }
 
     /**
